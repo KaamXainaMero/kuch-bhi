@@ -1,0 +1,61 @@
+void modify(){
+	char pname[50];
+	FILE *fp;
+	system("cls");
+	gotoxy(10,3);
+	printf("<--:MODIFY RECORD:-->");
+	gotoxy(10,5);
+	printf("Enter name of patient to modify record:");
+	fflush(stdin);
+	gets(pname);
+	fp = fopen("patientrecords.txt","r+");
+	if(fp == NULL){
+		gotoxy(10,6);
+		printf("Error opening file.");
+		exit(1);
+	}
+	rewind(fp);
+	fflush(stdin);
+	while(fread(&p,sizeof(p),1,fp) == 1)
+	{
+		if(strcmp(pname,p.full_name) == 0){
+			gotoxy(10,7);
+			printf("Enter new name: ");
+			gets(p.full_name);
+			gotoxy(10,8);
+	
+			fflush(stdin);
+			gets(p.contact);
+			gotoxy(10,9);
+	
+		printf("Enter new cabin no.: ");
+			scanf("%d",&p.cabin);
+		gotoxy(10,10);
+			printf("Enter new age: ");
+			scanf("%d",&p.age);
+			gotoxy(10,11);
+			printf("Enter new gender: ");
+			scanf(" %c",&p.gender);
+			gotoxy(10,12);
+			printf("Enter new cause: ");
+			fflush(stdin);
+			gets(p.cause);
+			gotoxy(10,13);
+			printf("Enter new address: ");
+			fflush(stdin);
+			gets(p.address);
+			gotoxy(10,14);
+			printf("Enter admission date: ");
+			fflush(stdin);
+			gets(p.admit_date);
+			fseek(fp ,-sizeof(p),SEEK_CUR);
+			fwrite(&p,sizeof(p),1,fp);
+			break;
+		}
+	}
+	fclose(fp);
+	gotoxy(10,18);
+	printf("Press any key to continue.");
+	getch();
+	menu();
+}
