@@ -27,24 +27,33 @@ struct patients{
 
 }p;
 
+
+
 int main()
 {
     gotoxy(15,8);
     printf("<--:Patients Record Management System:-->");
     
-    // gotoxy(18,10);
-    // printf("A C Project By:\n");
-    // gotoxy(19,12);
-    // printf("Aayush Poudel\t\t");
-    // printf("Sheshadri S. Bandyopadhyay\t\t");
-    // printf("Yogesh Ghale\t\t");
-    // printf("Wanchhit Acharya\t\t");
-
-    gotoxy(19,15);
-    printf("Press any key to continue.");
-    getch();
-    menu();
-    return 0;
+  /*	gotoxy(22,10);
+    	printf("A C Project By:\n");
+    	gotoxy(24,12);
+    	printf("Aayush Poudel\t\t");
+    	printf("Sheshadri S. Bandyopadhyay\t\t");
+    	printf("Yogesh Ghale\t\t");
+    	printf("Wanchhit Acharya\n\n\n");
+  */	
+    	
+    	gotoxy(19,15);
+    	printf("Press Enter key to continue: ");
+    	fflush(stdin);
+    	char d=getchar();
+    	while(d!='\n'){
+    		system("cls");
+    		main();
+			}
+			
+    	menu();
+    	return 0;
 }
 
 void menu()
@@ -93,6 +102,11 @@ void menu()
         break;
 
     case 6:
+    		system("cls");
+    		gotoxy(34,14);
+    		printf("<-- THANK YOU -->");
+    		gotoxy(10,24);
+    		printf("\n");
         exit(1);
         break;
 
@@ -197,9 +211,7 @@ void view(){
    
     while(fread(&p,sizeof(p),1,fp) == 1){
         gotoxy(10,j);
-//       printf("%s",p.contact);
-//       printf("%-7d%-22s%-12d%-9c%-12s%-12s%-12d%-12s%-12s",i,p.full_name,p.age,p.gender,p.contact,p.address,p.cabin,p.coa,p.admit_date);
-		printf("%-7d%-20s%-5d%-8c%-16s%-18s%-8d%-20s%-10s",i,p.full_name,p.age,p.gender,p.contact,p.address,p.cabin,p.cause,p.admit_date);
+				printf("%-7d%-20s%-5d%-8c%-16s%-18s%-8d%-20s%-10s",i,p.full_name,p.age,p.gender,p.contact,p.address,p.cabin,p.cause,p.admit_date);
         i++;
         j+=2;
     }
@@ -254,28 +266,28 @@ void modify(){
 			gotoxy(10,7);
 			printf("Enter new name: ");
 			gets(p.full_name);
-			gotoxy(10,8);
-			printf("Enter new contact: ");
-			fflush(stdin);
-			gets(p.contact);
 			gotoxy(10,9);
-			printf("Enter new cabin no.: ");
-			scanf("%d",&p.cabin);
-			gotoxy(10,10);
 			printf("Enter new age: ");
 			scanf("%d",&p.age);
 			gotoxy(10,11);
 			printf("Enter new gender: ");
 			scanf(" %c",&p.gender);
-			gotoxy(10,12);
-			printf("Enter new cause: ");
-			fflush(stdin);
-			gets(p.cause);
 			gotoxy(10,13);
+			printf("Enter new contact: ");
+			fflush(stdin);
+			gets(p.contact);
+			gotoxy(10,15);
 			printf("Enter new address: ");
 			fflush(stdin);
 			gets(p.address);
-			gotoxy(10,14);
+			gotoxy(10,17);
+			printf("Enter new cabin no.: ");
+			scanf("%d",&p.cabin);
+			gotoxy(10,19);
+			printf("Enter new cause: ");
+			fflush(stdin);
+			gets(p.cause);
+			gotoxy(10,21);
 			printf("Enter admission date: ");
 			fflush(stdin);
 			gets(p.admit_date);
@@ -285,7 +297,7 @@ void modify(){
 		}
 	}
 	fclose(fp);
-	gotoxy(10,18);
+	gotoxy(10,25);
 	printf("Press any key to continue.");
 	getch();
 	menu();
@@ -298,43 +310,62 @@ void modify(){
 
 
 void delrec(){
-	char ptname[50];
+	int ptcabin,count=0;
 	FILE *fp,*ft;
 	system("cls");
 	gotoxy(10,3);
 	printf("<--:DELETE RECORD:-->");
 	gotoxy(10,5);
-	printf("Enter name of patient to delete record : ");
-	fflush(stdin);
-	gets(ptname);
+	printf("Enter cabin no. of patient to delete record : ");
+	scanf("%d",&ptcabin);
 	fp = fopen("patientrecords.txt","r+");
 	if(fp == NULL){
 		gotoxy(10,6);
-		printf("Error opening file record.");
+		printf("Error opening file.");
 		exit(1);
 	}
 	ft = fopen("temp.txt","w+");
 	if(ft == NULL){
 		gotoxy(10,6);
-		printf("Error opening file temp.");
+		printf("Error opening file.");
 		exit(1);
 	}
 	while(fread(&p,sizeof(p),1,fp) == 1){
-		if(strcmp(ptname,p.full_name)!=0)
+		if(ptcabin!=p.cabin)
 			fwrite(&p,sizeof(p),1,ft);
+		else
+			count++;
 	}
 	fclose(fp);
 	fclose(ft);
-	remove("patientrecords.txt");
-	rename("temp.txt","patientrecords.txt");
+	
+	fp = fopen("patientrecords.txt","w+");
+	if(fp == NULL){
+		gotoxy(10,6);
+		printf("Error opening file.");
+		exit(1);
+	}
+	ft = fopen("temp.txt","r+");
+	if(ft == NULL){
+		gotoxy(10,6);
+		printf("Error opening file.");
+		exit(1);
+	}
+	while(fread(&p,sizeof(p),1,ft) == 1){
+			fwrite(&p,sizeof(p),1,fp);
+	}
+	fclose(fp);
+	fclose(ft);
 	gotoxy(10,10);
+	if(count == 0)
+		printf("No records found!");
+	else
+		printf("Record successfully deleted!");
+	gotoxy(10,12);
 	printf("Press any key to continue.");
 	getch();
 	menu();
 }
-
-
-
 
 
 
